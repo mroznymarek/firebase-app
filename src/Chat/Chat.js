@@ -41,6 +41,16 @@ class Chat extends React.Component {
         )
     }
 
+    onDeleteMessageClick = (key) => {
+        fetch ('https://ad-snadbox.firebaseio.com/JFDDL7/messages/'+key+'.json',
+        {
+            method: 'DELETE',
+        }
+        )
+    }
+
+
+
     render() {
         return (
             <div>
@@ -63,6 +73,7 @@ class Chat extends React.Component {
                             ([key, message]) => (
                                 <div
                                     key={key}
+                                    onClick={() => this.onDeleteMessageClick(key)}
                                 >
                                     <div>
                                         <b>{message.author}</b>
