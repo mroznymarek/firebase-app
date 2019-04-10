@@ -1,6 +1,10 @@
 import React from 'react'
+import moment from 'moment'
+import 'moment/locale/pl'
 
 import { database } from '../firebaseConf'
+
+moment.locale('pl')
 
 class Chat extends React.Component {
   state = {
@@ -30,6 +34,8 @@ class Chat extends React.Component {
                 <div
                 key = {key}
                 >
+                {moment(message.date).fromNow()}
+                |
                 {message.text}
                 </div>
             )    
