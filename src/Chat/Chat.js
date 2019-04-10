@@ -22,7 +22,19 @@ class Chat extends React.Component {
   render() {
     return (
       <div>
-
+        {
+        this.state.messages &&
+        Object.entries(this.state.messages)
+        .map (
+            ([key, message]) => (
+                <div
+                key = {key}
+                >
+                {message.text}
+                </div>
+            )    
+        )
+        }
       </div>
     )
   }
