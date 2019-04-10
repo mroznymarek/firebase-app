@@ -7,42 +7,76 @@ import { database } from '../firebaseConf'
 moment.locale('pl')
 
 class Chat extends React.Component {
-  state = {
-    messages: null,
-  }
+    state = {
+        messages: null,
+    }
 
-  componentDidMount() {
-    database.ref('/JFDDL7/messages')
-      .on(
-        'value',
-        (snapshot) => {
-          this.setState({
-            messages: snapshot.val(),
-          })
+    componentDidMount() {
+        database.ref('/JFDDL7/messages')
+            .on(
+                'value',
+                (snapshot) => {
+                    this.setState({
+                        messages: snapshot.val(),
+                    })
+                }
+            )
+    }
+
+    onNewMessageTextChange = event => this.setState({
+        newMessageText: event.target.value
+    })
+
+    onSendClick = () => {
+        const newMessage = {
+            text: this.state.newMessageText,
+            date: Date.now(),
+            author: 'Marek Mróz'
         }
-      )
-  }
-
-  render() {
-    return (
-      <div>
-        {
-        this.state.messages &&
-        Object.entries(this.state.messages)
-        .map (
-            ([key, message]) => (
-                <div
-                key = {key}
-                >
-                {moment(message.date).fromNow()}
-                |
-                {message.text}
-                </div>
-            )    
+        fetch('https://ad-snadbox.firebaseio.com/JFDDL7/messages.json',
+            {
+                method: 'POST',
+                body: JSON.stringify(newMessage)
+            }
         )
-        }
-      </div>
-    )
-  }
+    }
+
+    render() {
+        return (
+            <div>
+                <div>
+                    <input
+                        value={this.state.newMessageText}
+                        onChange={this.onNewMessageTextChange}
+                    />
+                </div>
+                <button
+                    onClick={this.onSendClick}
+                >
+                    WYŚLIJ
+                </button>
+                {
+                    this.state.messages &&
+                    Object.entries(this.state.messages)
+                        .map(
+
+                            ([key, message]) => (
+                                <div
+                                    key={key}
+                                >
+                                    <div>
+                                        <b>{message.author}</b>
+                                    </div>
+                                    <div>
+                                        {moment(message.date).fromNow()}
+                                    </div>
+                                    {message.text}
+                                </div>
+                            )
+                        )
+                }
+            </div >
+        )
+    }
 }
 export default Chat
